@@ -17,9 +17,9 @@ class LibraryItem:
         return self._title
 
     @classmethod
-    def id_generate(cls, title):
-        cls.id_counter += 1
-        return cls(cls.id_counter, title)
+    def id_generate(cls, *args, **kwargs):
+        LibraryItem.id_counter += 1
+        return cls(LibraryItem.id_counter, *args, **kwargs)
 
     def print_details(self):
         return f"{self.id}: {self.title}"
@@ -138,9 +138,10 @@ class Member:
 
 library = Library()
 member = Member(1, "Ivan")
-book1 = Book(LibraryItem.id_counter + 1, "1984", "Orwell", 300, 1949)
-book2 = Book(LibraryItem.id_counter + 2, "Dune", "Herbert", 412, 1965)
-magazine1 = Magazine(LibraryItem.id_counter + 3, "Tech Today", 5, "June")
+
+book1 = Book.id_generate("1984", "Orwell", 300, 1949)
+book2 = Book.id_generate("Dune", "Herbert", 412, 1965)
+magazine1 = Magazine.id_generate("Tech Today", 5, "June")
 
 library.add_item(book1)
 library.add_item(book2)
@@ -149,12 +150,15 @@ library.add_item(magazine1)
 print("\nAll items in library:")
 library.list_all_items()
 
-print("\nFind by title:")
+print("\n Find by title:")
 found = library.find_by_title("Dune")
-print(found.print_details())
+if found:
+    print(found.print_details())
+else:
+    print("Not found.")
 
 library.borrow_item(member, book1.id)
-print("\n Borrowed book IDs:")
+print("\nBorrowed book IDs:")
 print(member.borrowed_items)
 
 try:
@@ -166,5 +170,7 @@ library.return_item(member, book1.id)
 print("\nAfter return:")
 print(member.borrowed_items)
 
-print("\n📦 Borrowed items:")
+print("\n Borrowed items:")
 member.list_borrowed_items()
+
+
